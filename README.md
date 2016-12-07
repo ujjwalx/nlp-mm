@@ -1,0 +1,1 @@
+This is a Python based Implementation of a CNN-GRU based Image Caption System based on the Keras NN library. 
