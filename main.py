@@ -11,8 +11,8 @@ from keras.layers.wrappers import TimeDistributed
 
 # Load Files into Memory.
 
-image_features = numpy.load('smaller_merged_train.npy')
-with open('smaller_merged_train.json') as f:
+image_features = numpy.load('merged_train.npy')
+with open('merged_train.json') as f:
     image_captions = json.load(f)
 
 # Remove this to end fixed testing with 5 data features
@@ -105,7 +105,7 @@ model.compile(loss='sparse_categorical_crossentropy', optimizer='rmsprop')
 
 print(x_train.shape)
 print(y_train.shape)
-model.fit([image_features, x_train], y_train, batch_size=10, nb_epoch=150)
+model.fit([image_features, x_train], y_train, batch_size=200, nb_epoch=20)
 
 # Serialize model to JSON
 
