@@ -101,11 +101,38 @@ model.add(GRU(256, return_sequences=True))
 model.add(TimeDistributed(Dense(vocab_size)))
 model.add(Activation('softmax'))
 
-model.compile(loss='sparse_categorical_crossentropy', optimizer='rmsprop')
+
+model.compile(loss='sparse_categorical_crossentropy', optimizer='rmsprop',metrics=['accuracy'])
+
+# Checkpoints
+
+filepath="weights.best.hdf5"
+checkpoint = ModelCheckpoint(filepath, monitor='val_acc', verbose=1, save_best_only=True, mode='max')
+callbacks_list = [checkpoint]
+
+print ("Checkpoints are now active...")
 
 print(x_train.shape)
 print(y_train.shape)
-model.fit([image_features, x_train], y_train, batch_size=200, nb_epoch=20)
+
+print ("Training Initiated. You may notice reduced system functionality beyond this point")
+
+def generate_data():
+    for index in len(x_train):
+		x_single = x_train[index]
+		y_single = y_train[index]
+        image = image_features[index]
+        x, y = ([image,x],y)
+        yield (x, y)
+    f.close()
+
+model.fit_generator(generate_data(),samples_per_epoch=10000, nb_epoch=10)
+
+
+# model.fit([image_features, x_train], y_train, batch_size=200, nb_epoch=20)
+
+print("Training Complete")
+
 
 # Serialize model to JSON
 
@@ -113,10 +140,11 @@ model_json = model.to_json()
 with open("model.json","w") as json_file:
     json_file.write(model_json)
 
+print("Model Saved")
 # Save weights
 
 model.save_weights("model.h5")
-print ("Model Saved")
+print ("Weights Saved")
 
 
 # Model Evaluation
