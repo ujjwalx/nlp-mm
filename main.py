@@ -17,7 +17,7 @@ with open('smaller_merged_train.json') as f:
 
 # Remove this to end fixed testing with 5 data features
 
-image_features = image_features[:5]
+# image_features = image_features[:5]
 
 # Generates a list containing all sentences appended with start and termination symbols.
 # select_list contains the selector indexed sentence.
@@ -36,7 +36,7 @@ for i in range(len(image_captions)):
             select_list.append(temp)
 
 # Remove this to end fixed testing with 5 sentences
-select_list = select_list[:5]
+# select_list = select_list[:5]
 
 # Generation of nb_samples parameter
 
@@ -79,7 +79,7 @@ for i in range(len(caption_list)):
         caption_list[i][j] = char_labels[caption_list[i][j]] + 1
 
 
-caption_list = sequence.pad_sequences(caption_list, maxlen = MAXLEN+1, padding = 'post')
+caption_list = sequence.pad_sequences(caption_list, maxlen=MAXLEN+1, padding='post')
 x_train = caption_list[:, :-1]
 y_train = caption_list[:, 1:, numpy.newaxis]
 
@@ -107,11 +107,6 @@ print(x_train.shape)
 print(y_train.shape)
 model.fit([image_features, x_train], y_train, batch_size=10, nb_epoch=150)
 
-# Model Evaluation
-
-# scores = model.evaluate([image_features, x_train], y_train,verbose = 0)
-# print ("%s: %.2f%%" %(model.metrics_names[1],scores[1]*100))
-
 # Serialize model to JSON
 
 model_json = model.to_json()
@@ -123,14 +118,20 @@ with open("model.json","w") as json_file:
 model.save_weights("model.h5")
 print ("Model Saved")
 
+
+# Model Evaluation
+
+# scores = model.evaluate([image_features, x_train], y_train,verbose = 0)
+# print ("%s: %.2f%%" %(model.metrics_names[1],scores[1]*100))
+
 # Prediction Routine
 
-x_test = x_train[:1]
-images_test = image_features[:1]
-
-x_test = numpy.asarray(x_test)
-
-images_test = numpy.asarray(images_test)
-prediction = model.predict_classes([images_test,x_test])
-
-print(prediction)
+# x_test = x_train[:1]
+# images_test = image_features[:1]
+#
+# x_test = numpy.asarray(x_test)
+#
+# images_test = numpy.asarray(images_test)
+# prediction = model.predict_classes([images_test,x_test])
+#
+# print(prediction)
